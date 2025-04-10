@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scraped Data to Clipboard</title>
+    <style>
+        body {
+            width: 300px;
+            padding: 10px;
+            font-family: Arial, sans-serif;
+        }
+        button {
+            width: 100%;
+            padding: 8px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .hint {
+            font-size: 11px;
+            color: #666;
+            margin-top: 8px;
+            text-align: center;
+        }
+        .feature-list {
+            font-size: 12px;
+            color: #444;
+            margin-top: 12px;
+            padding-left: 15px;
+        }
+        .feature-list li {
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <button id="copyButton">Scrape CivitAI Page</button>
+    <div class="hint">Shift+Click to copy entire page HTML</div>
+    
+    <ul class="feature-list">
+        <li><strong>Model pages:</strong> Get model name, triggers, and more</li>
+        <li><strong>Image pages:</strong> Get prompt, models used, and more</li>
+        <li><strong>NEW:</strong> Multi-line prompts are formatted with asterisks</li>
+        <li><strong>NEW:</strong> &lt;lora:name&gt; tags are properly formatted</li>
+    </ul>
+    
+    <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "edge-extension-for-civitai-lora",
+  "version": "1.0.0",
+  "description": "MS Edge Extension to parse CivitAI Lora pages",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode production",
+    "watch": "webpack --watch --mode development"
+  },
+  "author": "Aaron Buhr",
+  "license": "ISC",
+  "devDependencies": {
+    "webextension-toolbox": "^4.0.3"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Edge Extension for CivitAI Lora Scraping",
+  "version": "1.2.0",
+  "description": "Scrape information from CivitAI pages. Format prompts by replacing newlines with asterisks and properly handling lora tags.",
+  "icons": {
+    "48": "icons/ai-eye-transparent-48x48.png",
+    "96": "icons/ai-eye-transparent-96x96.png"
+  },
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "clipboardWrite"
+  ],
+  "action": {
+    "default_icon": {
+        "48": "icons/ai-eye-transparent-48x48.png"
+    },
+    "default_popup": "src/popup.html",
+    "default_title": "Scrape Civitai Lora Info"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.civitai.com/models/*",
+        "*://*.civitai.com/images/*"
+      ],
+      "js": ["src/contentScript.js"]
+    }
+  ]
+}
