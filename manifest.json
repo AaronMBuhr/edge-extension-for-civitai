@@ -14,7 +14,7 @@
   ],
   "action": {
     "default_icon": {
-        "48": "icons/ai-eye-transparent-48x48.png"
+      "48": "icons/ai-eye-transparent-48x48.png"
     },
     "default_popup": "src/popup.html",
     "default_title": "Scrape Civitai Lora Info"
@@ -22,10 +22,12 @@
   "content_scripts": [
     {
       "matches": [
-        "*://*.civitai.com/models/*",
-        "*://*.civitai.com/images/*"
+        "<all_urls>"
       ],
-      "js": ["src/contentScript.js"]
+      "js": [
+        "src/contentScript.js"
+      ],
+      "run_at": "document_idle"
     }
   ]
 }

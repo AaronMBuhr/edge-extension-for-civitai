@@ -1,48 +1,53 @@
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     console.log("Civitai Scraper: Message received", request);
-    if (request.action === 'scrapeAndCopyCivitai') {
-        // Check if shift key was pressed
-        if (request.shiftKey) {
-            console.log("Civitai Scraper: Shift key detected, copying entire page HTML");
-            copyEntirePageToClipboard()
-                .then(status => {
-                    sendResponse({ success: true, status: "Page HTML Copied!" });
-                })
-                .catch(error => {
-                    console.error("Civitai Scraper: Error copying page HTML:", error);
-                    sendResponse({ success: false, status: `Error: ${error.message}` });
-                });
-            return true;
-        }
-        
-        // Restore original logic
-        // Check if the URL is an image page by looking for the '/images/' path segment
-        if (request.url.includes('/images/') || new URL(request.url).pathname.startsWith('/images/')) {
-            console.log("Civitai Scraper: Detected image page URL:", request.url);
-            scrapeImagePageAndCopy(request.url)
-                .then(status => {
-                    // Send a success response with a non-empty status message
-                    sendResponse({ success: true, status: "Copied!" });
-                })
-                .catch(error => {
-                    console.error("Civitai Scraper: Error during image page scrape/copy:", error);
-                    sendResponse({ success: false, status: `Error: ${error.message}` });
-                });
-        } else {
-            scrapeCivitaiDataAndCopy(request.url)
-                .then(status => {
-                    // Send a success response with a non-empty status message
-                    sendResponse({ success: true, status: "Copied!" });
-                })
-                .catch(error => {
-                    console.error("Civitai Scraper: Error during scrape/copy:", error);
-                    sendResponse({ success: false, status: `Error: ${error.message}` });
-                });
-        }
-        
+
+    if (request.action !== 'scrapeAndCopyCivitai') return;
+
+    // Handle Shift+Click (copy HTML) on any site
+    if (request.shiftKey) {
+        console.log("Shift-click: Copying entire page HTML (universal)");
+        copyEntirePageToClipboard()
+            .then(status => {
+                sendResponse({ success: true, status: "Page HTML Copied!" });
+            })
+            .catch(error => {
+                console.error("Error copying page HTML:", error);
+                sendResponse({ success: false, status: `Error: ${error.message}` });
+            });
+        return true; // async
+    }
+
+    // Only allow scraping logic on civitai.com
+    const url = request.url;
+    const isCivitai = url.includes('civitai.com/models/') || url.includes('civitai.com/images/');
+    if (!isCivitai) {
+        console.warn("Non-CivitAI page: CivitAI scraping not supported.");
+        sendResponse({ success: false, status: "Cannot process this site. Only works on civitai.com/models/ or /images/." });
         return true;
     }
+
+    // Dispatch to appropriate scrape function
+    if (url.includes('/images/') || new URL(url).pathname.startsWith('/images/')) {
+        console.log("Detected CivitAI image page");
+        scrapeImagePageAndCopy(url)
+            .then(() => sendResponse({ success: true, status: "Copied!" }))
+            .catch(error => {
+                console.error("Image page scrape error:", error);
+                sendResponse({ success: false, status: `Error: ${error.message}` });
+            });
+    } else {
+        console.log("Detected CivitAI model page");
+        scrapeCivitaiDataAndCopy(url)
+            .then(() => sendResponse({ success: true, status: "Copied!" }))
+            .catch(error => {
+                console.error("Model page scrape error:", error);
+                sendResponse({ success: false, status: `Error: ${error.message}` });
+            });
+    }
+
+    return true; // keep sendResponse async
 });
+
 
 /**
  * Helper function to format prompt text:
